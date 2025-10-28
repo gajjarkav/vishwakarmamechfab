@@ -37,7 +37,9 @@ urlpatterns = [
     path("", include("vmf_app.urls")),
 ]
 
-# Serve static and media files during development
+# Serve static files during development only
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+# Serve media files in both development and production
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
