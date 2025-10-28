@@ -19,12 +19,21 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.http import HttpResponse
+from django.views.generic import TemplateView
+
+# Service worker view
+def service_worker_view(request):
+    with open(settings.BASE_DIR / 'static' / 'sw.js', 'r') as f:
+        content = f.read()
+    return HttpResponse(content, content_type='application/javascript')
 
 # Get admin URL from settings (for security)
 admin_url = getattr(settings, 'ADMIN_URL', 'admin/')
 
 urlpatterns = [
     path(admin_url, admin.site.urls),
+    path('sw.js', service_worker_view, name='service_worker'),
     path("", include("vmf_app.urls")),
 ]
 
