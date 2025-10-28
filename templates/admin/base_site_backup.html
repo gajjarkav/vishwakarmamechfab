@@ -1,0 +1,21 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block extrahead %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'admin/css/custom_admin.css' %}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block branding %}
+<div class="custom-branding">
+    <img src="https://res.cloudinary.com/dxtx1kkwy/image/upload/v1736579637/VISHVAKRMAtempFEVICON-removebg-preview_wsihip.png" alt="Vishwakarma Mechfab" class="admin-logo">
+    <h1 id="site-name">
+        <a href="{% url 'admin:index' %}">Vishwakarma Mechfab Admin</a>
+    </h1>
+</div>
+{% endblock %}
+
+{% block nav-global %}{% endblock %}
