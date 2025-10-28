@@ -212,8 +212,7 @@ LOGGING = {
         },
         'file': {
             'level': 'WARNING',
-            'class': 'logging.FileHandler',
-            'filename': BASE_DIR / 'logs' / 'security.log',
+            'class': 'logging.StreamHandler',  # Use StreamHandler for production
             'formatter': 'verbose',
         },
     },
