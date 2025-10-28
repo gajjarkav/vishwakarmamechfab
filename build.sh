@@ -17,16 +17,27 @@ python manage.py migrate
 echo "Collecting static files..."
 python manage.py collectstatic --noinput
 
-# Create superuser if it doesn't exist
-echo "Setting up admin user..."
+# Create admin users if they don't exist
+echo "Setting up admin users..."
 python manage.py shell -c "
 from django.contrib.auth import get_user_model
 User = get_user_model()
-if not User.objects.filter(username='admin').exists():
-    User.objects.create_superuser('admin', 'admin@vishwakarmamechfab.in', 'VishwakarmaAdmin2024!')
-    print('✅ Superuser created: admin')
+
+# Create first admin user (bhavik)
+if not User.objects.filter(username='bhavik').exists():
+    User.objects.create_superuser('bhavik', 'viswakarmamechfab@gmail.com', 'BhavikKDudhaiya')
+    print('✅ Superuser created: bhavik')
 else:
-    print('✅ Superuser already exists')
-" || echo "Superuser creation skipped"
+    print('✅ Superuser bhavik already exists')
+
+# Create second admin user (kavygajjar)
+if not User.objects.filter(username='kavygajjar').exists():
+    User.objects.create_superuser('kavygajjar', 'gajjarkav@gmail.com', 'KavyGajjar2024')
+    print('✅ Superuser created: kavygajjar')
+else:
+    print('✅ Superuser kavygajjar already exists')
+
+print('✅ Admin users setup completed')
+" || echo "Admin users creation skipped"
 
 echo "✅ Build completed successfully!"
