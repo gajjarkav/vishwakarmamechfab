@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: vishwakarmamechfab
+    env: python
+    plan: free
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn vmf_project.wsgi:application"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.6
+      - key: DJANGO_DEBUG
+        value: False
+      - key: DJANGO_SECURE_SSL_REDIRECT
+        value: True
+      - key: DJANGO_SESSION_COOKIE_SECURE
+        value: True
+      - key: DJANGO_CSRF_COOKIE_SECURE
+        value: True
+      - key: DJANGO_SECURE_HSTS_SECONDS
+        value: 31536000
+
+  - type: pserv
+    name: vishwakarmamechfab-db
+    plan: free
+    databaseName: vishwakarmamechfab
+    databaseUser: vmf_user
