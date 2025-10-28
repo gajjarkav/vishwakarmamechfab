@@ -511,4 +511,156 @@ scrollToTopBtn.addEventListener('click', () => {
     });
 });
 
+/* =============== VIDEO PLAYER CONTROLS =============== */
+document.addEventListener('DOMContentLoaded', function() {
+    const video = document.querySelector('.video-player__video');
+    const playPauseBtn = document.querySelector('.video-player__play-pause');
+    const muteBtn = document.querySelector('.video-player__mute');
+    const progressBar = document.querySelector('.video-player__progress-bar');
+    const playIcon = document.querySelector('.video-player__play-icon');
+    const pauseIcon = document.querySelector('.video-player__pause-icon');
+    const volumeIcon = document.querySelector('.video-player__volume-icon');
+    const muteIcon = document.querySelector('.video-player__mute-icon');
+
+    if (!video) return; // Exit if video element not found
+
+    // Initialize video state
+    let isPlaying = true; // Video starts with autoplay
+    let isMuted = true;   // Video starts muted
+
+    // Update UI to match initial state
+    updatePlayPauseIcon();
+    updateMuteIcon();
+
+    // Play/Pause functionality
+    if (playPauseBtn) {
+        playPauseBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            togglePlayPause();
+        });
+    }
+
+    // Mute/Unmute functionality
+    if (muteBtn) {
+        muteBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            toggleMute();
+        });
+    }
+
+    // Video click to play/pause (but not when clicking controls)
+    video.addEventListener('click', (e) => {
+        // Don't toggle if clicking on control buttons
+        if (e.target.closest('.video-control-btn')) {
+            return;
+        }
+        e.preventDefault();
+        togglePlayPause();
+    });
+
+    // Update progress bar
+    video.addEventListener('timeupdate', updateProgress);
+
+    // Video ended
+    video.addEventListener('ended', () => {
+        // Video has loop attribute, so this shouldn't trigger often
+        isPlaying = false;
+        updatePlayPauseIcon();
+    });
+
+    // Video play/pause events (for external controls like browser)
+    video.addEventListener('play', () => {
+        isPlaying = true;
+        updatePlayPauseIcon();
+    });
+
+    video.addEventListener('pause', () => {
+        isPlaying = false;
+        updatePlayPauseIcon();
+    });
+
+    // Functions
+    function togglePlayPause() {
+        if (isPlaying) {
+            video.pause();
+            isPlaying = false;
+        } else {
+            video.play().catch(e => console.log('Video play failed:', e));
+            isPlaying = true;
+        }
+        updatePlayPauseIcon();
+    }
+
+    function toggleMute() {
+        if (isMuted) {
+            video.muted = false;
+            isMuted = false;
+        } else {
+            video.muted = true;
+            isMuted = true;
+        }
+        updateMuteIcon();
+    }
+
+    function updatePlayPauseIcon() {
+        if (playIcon && pauseIcon) {
+            if (isPlaying) {
+                playIcon.style.display = 'none';
+                pauseIcon.style.display = 'block';
+            } else {
+                playIcon.style.display = 'block';
+                pauseIcon.style.display = 'none';
+            }
+        }
+    }
+
+    function updateMuteIcon() {
+        if (volumeIcon && muteIcon) {
+            if (isMuted) {
+                volumeIcon.style.display = 'none';
+                muteIcon.style.display = 'block';
+            } else {
+                volumeIcon.style.display = 'block';
+                muteIcon.style.display = 'none';
+            }
+        }
+    }
+
+    function updateProgress() {
+        if (progressBar && video.duration) {
+            const progress = (video.currentTime / video.duration) * 100;
+            progressBar.style.width = progress + '%';
+        }
+    }
+
+    // Handle video load errors gracefully
+    video.addEventListener('error', (e) => {
+        console.log('Video load error:', e);
+        // You can add fallback behavior here
+    });
+
+    // Intersection Observer for performance
+    const videoObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                // Video is visible, ensure it's playing if it should be
+                if (isPlaying && video.paused) {
+                    video.play().catch(e => console.log('Auto-play failed:', e));
+                }
+            } else {
+                // Video is not visible, pause it for performance
+                if (isPlaying && !video.paused) {
+                    video.pause();
+                }
+            }
+        });
+    }, {
+        threshold: 0.5 // Trigger when 50% of video is visible
+    });
+
+    videoObserver.observe(video);
+});
+
 console.log('Vishwakarma Mechfab website loaded successfully!');
